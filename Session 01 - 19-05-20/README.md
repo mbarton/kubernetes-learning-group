@@ -149,39 +149,40 @@ Deployments
 
 ```bash
 kubectl apply -f ./01-replicated-deployment.yaml
+deployment.apps/phpinfo-deployment created
 
 kubectl get deployments
-NAME               READY   UP-TO-DATE   AVAILABLE   AGE
-nginx-deployment   3/3     3            3           3s
+NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
+phpinfo-deployment   3/3     3            3           10s
 
 kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-574b87c764-d6sbg   1/1     Running   0          19s
-nginx-deployment-574b87c764-h9865   1/1     Running   0          19s
-nginx-deployment-574b87c764-spqgg   1/1     Running   0          19s
+NAME                                  READY   STATUS    RESTARTS   AGE
+phpinfo-deployment-5b855b4497-kfg82   1/1     Running   0          20s
+phpinfo-deployment-5b855b4497-nwg2r   1/1     Running   0          20s
+phpinfo-deployment-5b855b4497-qhmmv   1/1     Running   0          20s
 
 kubectl get replicasets
-NAME                          DESIRED   CURRENT   READY   AGE
-nginx-deployment-574b87c764   3         3         3       30s
+NAME                            DESIRED   CURRENT   READY   AGE
+phpinfo-deployment-5b855b4497   3         3         3       29s
 
 kubectl describe replicasets
-Name:           nginx-deployment-574b87c764
+Name:           phpinfo-deployment-5b855b4497
 Namespace:      default
-Selector:       app=nginx,pod-template-hash=574b87c764
-Labels:         app=nginx
-                pod-template-hash=574b87c764
+Selector:       app=phpinfo,pod-template-hash=5b855b4497
+Labels:         app=phpinfo
+                pod-template-hash=5b855b4497
 Annotations:    deployment.kubernetes.io/desired-replicas: 3
                 deployment.kubernetes.io/max-replicas: 4
                 deployment.kubernetes.io/revision: 1
-Controlled By:  Deployment/nginx-deployment
+Controlled By:  Deployment/phpinfo-deployment
 Replicas:       3 current / 3 desired
 Pods Status:    3 Running / 0 Waiting / 0 Succeeded / 0 Failed
 Pod Template:
-  Labels:  app=nginx
-           pod-template-hash=574b87c764
+  Labels:  app=phpinfo
+           pod-template-hash=5b855b4497
   Containers:
-   nginx:
-    Image:        nginx:1.14.2
+   phpinfo:
+    Image:        mrbbarton/phpinfo:0.0.1
     Port:         80/TCP
     Host Port:    0/TCP
     Environment:  <none>
@@ -190,43 +191,37 @@ Pod Template:
 Events:
   Type    Reason            Age   From                   Message
   ----    ------            ----  ----                   -------
-  Normal  SuccessfulCreate  2m    replicaset-controller  Created pod: nginx-deployment-574b87c764-spqgg
-  Normal  SuccessfulCreate  2m    replicaset-controller  Created pod: nginx-deployment-574b87c764-d6sbg
-  Normal  SuccessfulCreate  2m    replicaset-controller  Created pod: nginx-deployment-574b87c764-h9865
+  Normal  SuccessfulCreate  41s   replicaset-controller  Created pod: phpinfo-deployment-5b855b4497-nwg2r
+  Normal  SuccessfulCreate  41s   replicaset-controller  Created pod: phpinfo-deployment-5b855b4497-kfg82
+  Normal  SuccessfulCreate  41s   replicaset-controller  Created pod: phpinfo-deployment-5b855b4497-qhmmv
 ```
 
 **Scale up and down**
 
 ```bash
-kubectl scale --replicas=6 deployment/nginx-deployment
-deployment.apps/nginx-deployment scaled
+kubectl scale --replicas=6 deployment/phpinfo-deployment
+deployment.apps/phpinfo-deployment scaled
 
 kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-574b87c764-d6sbg   1/1     Running   0          4m4s
-nginx-deployment-574b87c764-gcftb   1/1     Running   0          5s
-nginx-deployment-574b87c764-h9865   1/1     Running   0          4m4s
-nginx-deployment-574b87c764-pfqr6   1/1     Running   0          5s
-nginx-deployment-574b87c764-rrg55   1/1     Running   0          5s
-nginx-deployment-574b87c764-spqgg   1/1     Running   0          4m4s
+NAME                                  READY   STATUS    RESTARTS   AGE
+phpinfo-deployment-5b855b4497-5295d   1/1     Running   0          10s
+phpinfo-deployment-5b855b4497-7qfzr   1/1     Running   0          10s
+phpinfo-deployment-5b855b4497-kfg82   1/1     Running   0          85s
+phpinfo-deployment-5b855b4497-l2rf2   1/1     Running   0          10s
+phpinfo-deployment-5b855b4497-nwg2r   1/1     Running   0          85s
+phpinfo-deployment-5b855b4497-qhmmv   1/1     Running   0          85s
 
-kubectl scale --replicas=3 deployment/nginx-deployment
-deployment.apps/nginx-deployment scaled
+kubectl scale --replicas=3 deployment/phpinfo-deployment
+deployment.apps/phpinfo-deployment scaled
 
 kubectl get pods --watch
-NAME                                READY   STATUS        RESTARTS   AGE
-nginx-deployment-574b87c764-d6sbg   1/1     Running       0          4m29s
-nginx-deployment-574b87c764-gcftb   0/1     Terminating   0          30s
-nginx-deployment-574b87c764-h9865   1/1     Running       0          4m29s
-nginx-deployment-574b87c764-pfqr6   0/1     Terminating   0          30s
-nginx-deployment-574b87c764-rrg55   0/1     Terminating   0          30s
-nginx-deployment-574b87c764-spqgg   1/1     Running       0          4m29s
-nginx-deployment-574b87c764-rrg55   0/1     Terminating   0          30s
-nginx-deployment-574b87c764-rrg55   0/1     Terminating   0          30s
-nginx-deployment-574b87c764-gcftb   0/1     Terminating   0          30s
-nginx-deployment-574b87c764-gcftb   0/1     Terminating   0          30s
-nginx-deployment-574b87c764-pfqr6   0/1     Terminating   0          32s
-nginx-deployment-574b87c764-pfqr6   0/1     Terminating   0          32s
+NAME                                  READY   STATUS        RESTARTS   AGE
+phpinfo-deployment-5b855b4497-5295d   0/1     Terminating   0          29s
+phpinfo-deployment-5b855b4497-7qfzr   0/1     Terminating   0          29s
+phpinfo-deployment-5b855b4497-kfg82   1/1     Running       0          104s
+phpinfo-deployment-5b855b4497-l2rf2   0/1     Terminating   0          29s
+phpinfo-deployment-5b855b4497-nwg2r   1/1     Running       0          104s
+phpinfo-deployment-5b855b4497-qhmmv   1/1     Running       0          104s
 ```
 
 Accessing instances
@@ -236,17 +231,15 @@ Accessing instances
 
 ```bash
 kubectl get pods
-NAME                                READY   STATUS    RESTARTS   AGE
-nginx-deployment-574b87c764-d6sbg   1/1     Running   0          7m32s
-nginx-deployment-574b87c764-h9865   1/1     Running   0          7m32s
-nginx-deployment-574b87c764-spqgg   1/1     Running   0          7m32s
+NAME                                  READY   STATUS    RESTARTS   AGE
+phpinfo-deployment-5b855b4497-kfg82   1/1     Running   0          2m5s
+phpinfo-deployment-5b855b4497-nwg2r   1/1     Running   0          2m5s
+phpinfo-deployment-5b855b4497-qhmmv   1/1     Running   0          2m5s
 
-kubectl port-forward nginx-deployment-574b87c764-d6sbg 8080:80
+kubectl port-forward phpinfo-deployment-5b855b4497-kfg82 8080:80
 Forwarding from 127.0.0.1:8080 -> 80
 Forwarding from [::1]:8080 -> 80
 ```
-
-TODO MRB: make this more obvious with a server that returns it's own IP?
 
 **Service**
 
@@ -255,10 +248,10 @@ kubectl apply -f ./02-service.yaml
 service/nginx-service configured
 
 kubectl get services
-NAME            TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-kubernetes      ClusterIP   10.96.0.1        <none>        443/TCP   6d7h
-nginx-service   ClusterIP   10.109.195.187   <none>        80/TCP    111m
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+kubernetes        ClusterIP   10.96.0.1      <none>        443/TCP   6d23h
+phpinfo-service   ClusterIP   10.99.198.58   <none>        80/TCP    15h
 
-kubectl port-forward services/nginx-service 8080:80
+kubectl port-forward services/phpinfo-service 8080:80
 ```
 

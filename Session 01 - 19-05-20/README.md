@@ -196,34 +196,6 @@ Events:
   Normal  SuccessfulCreate  41s   replicaset-controller  Created pod: phpinfo-deployment-5b855b4497-qhmmv
 ```
 
-**Scale up and down**
-
-```bash
-kubectl scale --replicas=6 deployment/phpinfo-deployment
-deployment.apps/phpinfo-deployment scaled
-
-kubectl get pods
-NAME                                  READY   STATUS    RESTARTS   AGE
-phpinfo-deployment-5b855b4497-5295d   1/1     Running   0          10s
-phpinfo-deployment-5b855b4497-7qfzr   1/1     Running   0          10s
-phpinfo-deployment-5b855b4497-kfg82   1/1     Running   0          85s
-phpinfo-deployment-5b855b4497-l2rf2   1/1     Running   0          10s
-phpinfo-deployment-5b855b4497-nwg2r   1/1     Running   0          85s
-phpinfo-deployment-5b855b4497-qhmmv   1/1     Running   0          85s
-
-kubectl scale --replicas=3 deployment/phpinfo-deployment
-deployment.apps/phpinfo-deployment scaled
-
-kubectl get pods --watch
-NAME                                  READY   STATUS        RESTARTS   AGE
-phpinfo-deployment-5b855b4497-5295d   0/1     Terminating   0          29s
-phpinfo-deployment-5b855b4497-7qfzr   0/1     Terminating   0          29s
-phpinfo-deployment-5b855b4497-kfg82   1/1     Running       0          104s
-phpinfo-deployment-5b855b4497-l2rf2   0/1     Terminating   0          29s
-phpinfo-deployment-5b855b4497-nwg2r   1/1     Running       0          104s
-phpinfo-deployment-5b855b4497-qhmmv   1/1     Running       0          104s
-```
-
 Accessing instances
 -------------------
 
@@ -255,3 +227,43 @@ phpinfo-service   ClusterIP   10.99.198.58   <none>        80/TCP    15h
 kubectl port-forward services/phpinfo-service 8080:80
 ```
 
+**Node port**
+
+```bash
+apply -f ./02-service.nodePort.yaml
+service/phpinfo-service configured
+
+kubectl get services
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+kubernetes        ClusterIP   10.96.0.1      <none>        443/TCP        6d23h
+phpinfo-service   NodePort    10.99.198.58   <none>        80:30007/TCP   16h
+```
+
+Scale up and down
+-----------------
+
+```bash
+kubectl scale --replicas=6 deployment/phpinfo-deployment
+deployment.apps/phpinfo-deployment scaled
+
+kubectl get pods
+NAME                                  READY   STATUS    RESTARTS   AGE
+phpinfo-deployment-5b855b4497-5295d   1/1     Running   0          10s
+phpinfo-deployment-5b855b4497-7qfzr   1/1     Running   0          10s
+phpinfo-deployment-5b855b4497-kfg82   1/1     Running   0          85s
+phpinfo-deployment-5b855b4497-l2rf2   1/1     Running   0          10s
+phpinfo-deployment-5b855b4497-nwg2r   1/1     Running   0          85s
+phpinfo-deployment-5b855b4497-qhmmv   1/1     Running   0          85s
+
+kubectl scale --replicas=3 deployment/phpinfo-deployment
+deployment.apps/phpinfo-deployment scaled
+
+kubectl get pods --watch
+NAME                                  READY   STATUS        RESTARTS   AGE
+phpinfo-deployment-5b855b4497-5295d   0/1     Terminating   0          29s
+phpinfo-deployment-5b855b4497-7qfzr   0/1     Terminating   0          29s
+phpinfo-deployment-5b855b4497-kfg82   1/1     Running       0          104s
+phpinfo-deployment-5b855b4497-l2rf2   0/1     Terminating   0          29s
+phpinfo-deployment-5b855b4497-nwg2r   1/1     Running       0          104s
+phpinfo-deployment-5b855b4497-qhmmv   1/1     Running       0          104s
+```

@@ -62,3 +62,27 @@ curl http://localhost:30009
     </body>
 </html>
 ```
+
+### 4 - Deploy a new version
+
+Change `index.scala.html`:
+
+```
+@()
+
+@main("Welcome to Kubernetes") {
+  <h1>Welcome to Kubernetes!</h1>
+}
+```
+
+Change the version in `build.sbt`:
+
+```
+version := "1.1-SNAPSHOT"
+```
+
+Roll it out!
+
+```
+kubectl set image deployments/kubernetes-play-example kubernetes-play-example=mrbbarton/kubernetes-play-example:1.1-SNAPSHOT
+```

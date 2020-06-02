@@ -22,6 +22,12 @@ spec:
         envFrom:
         - secretRef:
             name: kubernetes-play-example
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: 9000
+          initialDelaySeconds: 10
+          periodSeconds: 3
 
 ---
 

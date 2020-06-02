@@ -1,7 +1,7 @@
 name := """kubernetes-play-example"""
 organization := "com.gu"
 
-version := "1.0-SNAPSHOT"
+version := "1.3-SNAPSHOT"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, DockerPlugin)

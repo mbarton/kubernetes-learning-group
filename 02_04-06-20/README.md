@@ -108,3 +108,23 @@ Roll it out!
 ```
 kubectl set image deployments/kubernetes-play-example kubernetes-play-example=mrbbarton/kubernetes-play-example:1.1-SNAPSHOT
 ```
+
+### 5 - Set a healthcheck
+
+*The changes to the app are available by checking out the `02-healthcheck` branch*
+
+```yaml
+livenessProbe:
+    httpGet:
+      path: /healthcheck
+      port: 9000
+    initialDelaySeconds: 10
+    periodSeconds: 3
+```
+
+Kubernetes has a number of [probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+for various different situations:
+
+- `livenessProbe`: is the app up and responsive (ie should it be available through the service or load balancer)
+- `startupProbe`: has the app started yet? Useful for slow start or if you can't combine this with the normal healthcheck
+- `readinessProbe`: as with the `livenessProbe` but the pod won't be killed if it fails, just taken out of service   

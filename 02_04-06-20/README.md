@@ -9,6 +9,10 @@ lazy val root = (project in file("."))
 dockerExposedPorts += 9000
 ```
 
+`dockerExposedPorts` writes an `EXPOSE` command to the Dockerfile. From [the docs](https://docs.docker.com/engine/reference/builder/):
+
+> The EXPOSE instruction does not actually publish the port. It functions as a type of documentation between the person who builds the image and the person who runs the container, about which ports are intended to be published
+
 ```
 sbt docker:publishLocal
 
@@ -24,10 +28,26 @@ docker run \
 ### 2 - Save the application secret in the cluster
 
 ```
-sbt playGenerateSecret | grep  "Generated new secret" | sed 's/Generated new secret\: /APPLICATION_SECRET="/' | sed 's/$/"/' > secret.env
+sbt playGenerateSecret | \
+    grep  "Generated new secret" | \
+    sed 's/Generated new secret\: /APPLICATION_SECRET="/' | \
+    sed 's/$/"/' > secret.env
+
 kubectl create secret generic kubernetes-play-example --from-env-file=./secret.env
 rm secret.env
 ```
+
+There are [various different ways of creating secrets](https://kubernetes.io/docs/concepts/configuration/secret/).
+I've used an env file to make it easy to test locally by [passing the file to Docker run](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file).
+
+Secrets are not [encrypted at rest in the default configuration](https://kubernetes.io/docs/concepts/configuration/secret/#security-properties)
+which is often required at the level of GDPR compliance we target. In practical terms, this means the default configuration
+is providing something akin to the "NoEcho" protection on Cloudformation Parameters, a simple protection against leaving the
+secret around in logs and on developer machines.
+
+That said, Google Kubernetes Engine encrypts secrets at rest by default (and [is customisable](https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets)).
+AWS EKS also encrypts with managed keys and supports [custom keys since March 5th 2020](https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-eks-adds-envelope-encryption-for-secrets-with-aws-kms/).
+
 
 ### 3 - Start the deployment
 

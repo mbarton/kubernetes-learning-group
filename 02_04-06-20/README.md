@@ -85,6 +85,8 @@ curl http://localhost:30009
 
 ### 4 - Deploy a new version
 
+*These changes are available by checking out the `02-set-image` branch*
+
 Change `index.scala.html`:
 
 ```

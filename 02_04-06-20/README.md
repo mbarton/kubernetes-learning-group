@@ -21,7 +21,7 @@ kubernetes-play-example 1.0-SNAPSHOT 4ab07214911c 17 seconds ago 532MB
 
 docker run \
     --env APPLICATION_SECRET=local-dev-testing \
-    --expose 9000 \
+    -p 9000:9000 \
     kubernetes-play-example:1.0-SNAPSHOT
 ```
 

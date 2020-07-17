@@ -16,25 +16,9 @@ spec:
     spec:
       containers:
       - name: kubernetes-play-example
-        image: mrbbarton/kubernetes-play-example:1.0-SNAPSHOT
+        image: mrbbarton/kubernetes-play-example:1.1-SNAPSHOT
         ports:
         - containerPort: 9000
         envFrom:
         - secretRef:
             name: kubernetes-play-example
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: kubernetes-play-example-service
-spec:
-  type: NodePort
-  selector:
-    app: kubernetes-play-example
-  ports:
-    - protocol: TCP
-      port: 9000
-      targetPort: 9000
-      nodePort: 30009

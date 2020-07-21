@@ -104,5 +104,5 @@ curl http://localhost:9000
 This would be much more useful if users could reach it!
 
 ```
-
+kubectl apply -f deployment.withlb.yaml
 ```
